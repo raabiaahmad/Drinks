@@ -98,8 +98,14 @@ public class Drink {
 	}
 
 	@Override
+	public String toString() {
+		return "Drink [id=" + id + ", name=" + name + ", type=" + type + ", flavour=" + flavour + ", volume=" + volume
+				+ "]";
+	}
+
+	@Override
 	public int hashCode() {
-		return Objects.hash(flavour, id, name, type, volume);
+		return Objects.hash(flavour, name, type, volume);
 	}
 
 	@Override
@@ -111,7 +117,8 @@ public class Drink {
 		if (getClass() != obj.getClass())
 			return false;
 		Drink other = (Drink) obj;
-		return Objects.equals(flavour, other.flavour) && id == other.id && Objects.equals(name, other.name)
+		return Objects.equals(flavour, other.flavour) && Objects.equals(name, other.name)
 				&& Objects.equals(type, other.type) && volume == other.volume;
 	}
+
 }
