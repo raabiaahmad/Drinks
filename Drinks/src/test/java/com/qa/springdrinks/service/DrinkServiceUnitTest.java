@@ -2,6 +2,10 @@ package com.qa.springdrinks.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +37,20 @@ public class DrinkServiceUnitTest {
 		Mockito.verify(this.repo, Mockito.times(1)).save(input);
 	}
 	
-
-
+	@Test
+	public void getAllTest() {
+		List<Drink> output = new ArrayList<Drink>();
+		output.add(new Drink(1L, "Hot Chocolate", "Hot", "Chocolate", 350));
+		output.add(new Drink(2L, "Caramel Macchiato", "Hot", "Carmel", 200));
+		
+		Mockito.when(this.repo.findAll()).thenReturn(output);
+		assertEquals(output, this.service.getAll());
+		Mockito.verify(this.repo, Mockito.times(1)).findAll();
+	}
+	
+	@Test
+	public void getByIdTest() {
+		
+	}
+	
 }
