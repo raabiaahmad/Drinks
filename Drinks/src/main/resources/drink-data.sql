@@ -1,0 +1,1 @@
+INSERT INTO drink(flavour, name, type, volume) VALUES ('Strawberry', 'Mirinda', 'Fizzy', 300)
