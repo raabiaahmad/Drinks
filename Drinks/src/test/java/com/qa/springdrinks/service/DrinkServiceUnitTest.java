@@ -1,5 +1,6 @@
 package com.qa.springdrinks.service;
 
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
@@ -41,62 +42,45 @@ public class DrinkServiceUnitTest {
 	public void getAllTest() {
 		List<Drink> output = new ArrayList<Drink>();
 		output.add(new Drink(1L, "Hot Chocolate", "Hot", "Chocolate", 350));
-		output.add(new Drink(2L, "Caramel Macchiato", "Hot", "Carmel", 200));
+		output.add(new Drink(2L, "Caramel Macchiato", "Hot", "Caramel", 200));
 		
 		Mockito.when(this.repo.findAll()).thenReturn(output);
 		assertEquals(output, this.service.getAll());
 		Mockito.verify(this.repo, Mockito.times(1)).findAll();
 	}
 	
-	
-//	@Test
-//	public void getByIdTest() {
-//		Drink correctOutput = new Drink(3L, "Sprite", "Fizzy", "Lime", 300);
-//		
-//		long correctIdInput = 3L;
-//		long invalidIdInput = 4L;
-//		
-//		Optional<Drink> correctIdOutput = Optional.ofNullable((Drink) correctOutput);
-//		Optional<Drink> invalidIdOutput = Optional.ofNullable(null);
-//		
-//		Mockito.when(this.repo.findById(3L)).thenReturn(correctIdOutput);
-//		Mockito.when(this.repo.findById(4L)).thenReturn(invalidIdOutput);
-//		
-//		assertEquals(correctIdOutput.get(), this.service.getById(correctIdInput));
-//		assertEquals(invalidIdOutput.get(), this.service.getById(invalidIdInput));
-//		
-//		Mockito.verify(this.repo, Mockito.times(1)).findById(3L);
-//		Mockito.verify(this.repo, Mockito.times(1)).findById(4L);
-//	}
-//	
-//	
-//	@Test
-//	public void updateTest() {
-//		long id = 1L;
-//		
-//		Drink existingDrink = new Drink(id, "Hot Chocolate", "Hot", "Chocolate", 350);
-//		Drink newValues = new Drink(id, "Latte", "Hot", "Coffee", 300);
-//		Drink updatedDrink = new Drink(id, newValues.getName(), newValues.getType(), newValues.getFlavour(), newValues.getVolume());
-//	
-//		Mockito.when(this.repo.findById(id)).thenReturn(Optional.of(existingDrink));
-//		Mockito.when(this.repo.save(updatedDrink)).thenReturn(updatedDrink);
-//		
-//		assertEquals(updatedDrink, this.service.update(id, newValues));
-//		
-//		Mockito.verify(this.repo, Mockito.times(1)).findById(id);
-//		Mockito.verify(this.repo, Mockito.times(1)).save(updatedDrink);	
-//	}
-	
+	@Test
+	public void getByIdTest() {
+		Optional<Drink> idOutput = Optional.of(new Drink(3L, "Sprite", "Fizzy", "Lime", 300));
+		Drink output = new Drink (3L, "Sprite", "Fizzy", "Lime", 300);
+		
+		Mockito.when(this.repo.findById(3L)).thenReturn(idOutput);
+		assertTrue(this.service.getById(3L).equals(output));
+		Mockito.verify(this.repo, Mockito.times(1)).findById(3L);
+	}
 	
 	@Test
-	public void deleteTest() {
-		long newId = 1L;
+	public void updateTest() {
+		Drink input = new Drink("Fanta", "Fizzy", "Pineapple", 300);
+		Optional<Drink> existingDrink = Optional.of(new Drink(1L, "Fanta", "Fizzy", "Orange", 330));
+		Drink updatedDrink = new Drink(1L, "Fanta", "Fizzy", "Pineapple", 300);
 		
-		Mockito.when(this.repo.existsById(newId)).thenReturn(false);
-		assertEquals(true, this.service.delete(newId));
+		Mockito.when(this.repo.findById(1L)).thenReturn(existingDrink);
+		Mockito.when(this.repo.saveAndFlush(updatedDrink)).thenReturn(updatedDrink);
+	
+		assertEquals(updatedDrink, this.service.update(1L, input));
 		
-		Mockito.verify(this.repo, Mockito.times(1)).deleteById(newId);
-		Mockito.verify(this.repo, Mockito.times(1)).existsById(newId);
+		Mockito.verify(this.repo, Mockito.times(1)).findById(1L);
+		Mockito.verify(this.repo, Mockito.times(1)).saveAndFlush(updatedDrink);	
+	}
+	
+	@Test
+	public void deleteTest() {		
+		Mockito.when(this.repo.existsById(1L)).thenReturn(false);
+		assertEquals(true, this.service.delete(1L));
+		
+		Mockito.verify(this.repo, Mockito.times(1)).deleteById(1L);
+		Mockito.verify(this.repo, Mockito.times(1)).existsById(1L);
 	}
 	
 }
