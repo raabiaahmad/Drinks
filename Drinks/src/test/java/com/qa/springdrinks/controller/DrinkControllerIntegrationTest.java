@@ -53,15 +53,13 @@ public class DrinkControllerIntegrationTest {
 	
 	@Test
 	public void getAllTest() throws Exception {
-		Drink entry = new Drink (1L, "Blonde Latte", "Hot", "Coffee", 470);
 		List<Drink> output = new ArrayList <>();
+		output.add(new Drink (1L, "Blonde Latte", "Hot", "Coffee", 470));
+		output.add(new Drink (2L, "Caffe Latte", "Hot", "Coffee", 470));
 		
-		output.add(entry);
-		String outputAsJSON = this.mapper.writeValueAsString(output);
+		String outputAsJSON = mapper.writeValueAsString(output);
 		
-		mvc.perform(get("/drink/getAll")
-				.content(outputAsJSON)
-				.contentType(MediaType.APPLICATION_JSON))
+		mvc.perform(get("/drink/getAll/"))
 				.andExpect(status().isOk())
 				.andExpect(content().json(outputAsJSON));
 	}
@@ -71,8 +69,7 @@ public class DrinkControllerIntegrationTest {
 		Drink entry = new Drink (1L, "Mocha", "Hot", "Coffee", 360);
 		String entryAsJSON = this.mapper.writeValueAsString(entry);
 		
-		mvc.perform(get("/drink/getById")
-				.contentType(MediaType.APPLICATION_JSON))
+		mvc.perform(get("/drink/getById"))
 				.andExpect(status().isOk())
 				.andExpect(content().json(entryAsJSON));
 	}
