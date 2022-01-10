@@ -54,34 +54,33 @@ public class DrinkControllerIntegrationTest {
 	@Test
 	public void getAllTest() throws Exception {
 		List<Drink> output = new ArrayList <>();
-		output.add(new Drink (1L, "Blonde Latte", "Hot", "Coffee", 470));
-		output.add(new Drink (2L, "Caffe Latte", "Hot", "Coffee", 470));
-		
+		output.add(new Drink (1L,"Mirinda", "Fizzy", "Strawberry", 300));
+
 		String outputAsJSON = mapper.writeValueAsString(output);
 		
-		mvc.perform(get("/drink/getAll/"))
+		mvc.perform(get("/drink/readAll"))
 				.andExpect(status().isOk())
 				.andExpect(content().json(outputAsJSON));
 	}
 	
 	@Test
 	public void getByIdTest() throws Exception {
-		Drink entry = new Drink (1L, "Mocha", "Hot", "Coffee", 360);
+		Drink entry = new Drink (1L,"Mirinda", "Fizzy", "Strawberry", 300);
 		String entryAsJSON = this.mapper.writeValueAsString(entry);
 		
-		mvc.perform(get("/drink/getById"))
+		mvc.perform(get("/drink/readById/1"))
 				.andExpect(status().isOk())
 				.andExpect(content().json(entryAsJSON));
 	}
 	
 	@Test
 	public void updateTest() throws Exception {
-		Drink entry = new Drink (1L, "Hot Chocolate", "Hot", "Chocolate", 400);
+		Drink entry = new Drink ("Mirinda", "Fizzy", "Strawberry", 300);
 		String entryAsJSON = this.mapper.writeValueAsString(entry);
-		Drink updated = new Drink(1L, "Mocha", "Hot", "Chocolate", 350);
+		Drink updated = new Drink (1L, "Mirinda", "Fizzy", "Strawberry", 300);
 		String updatedAsJSON = this.mapper.writeValueAsString(updated);
 		
-		mvc.perform(put("/drink/update")
+		mvc.perform(put("/drink/update/1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(entryAsJSON))
 				.andExpect(status().isAccepted())
@@ -90,7 +89,7 @@ public class DrinkControllerIntegrationTest {
 	
 	@Test
 	public void deleteTest() throws Exception {
-		mvc.perform(delete("/drink/delete")
+		mvc.perform(delete("/drink/delete/1")
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isNoContent());
 	}

@@ -61,9 +61,8 @@ public class DrinkControllerUnitTest {
 		
 		Mockito.when(this.service.getAll()).thenReturn(output);
 		
-		mvc.perform(get("/drink/getAll")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(outputAsJSON))
+		mvc.perform(get("/drink/readAll")
+				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().json(outputAsJSON));
 	}
@@ -75,9 +74,8 @@ public class DrinkControllerUnitTest {
 		
 		Mockito.when(this.service.getById(1L)).thenReturn(entry);
 		
-		mvc.perform(get("/drink/getById")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(entryAsJSON))
+		mvc.perform(get("/drink/readById/1")
+				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(content().json(entryAsJSON));
 	}
@@ -89,7 +87,7 @@ public class DrinkControllerUnitTest {
 		
 		Mockito.when(this.service.update(1L, entry)).thenReturn(entry);
 		
-		mvc.perform(put("/drink/update")
+		mvc.perform(put("/drink/update/1")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(entryAsJSON))
 				.andExpect(status().isAccepted())
@@ -100,7 +98,8 @@ public class DrinkControllerUnitTest {
 	public void deleteTest() throws Exception {
 		Mockito.when(this.service.delete(1L)).thenReturn(true);
 		
-		mvc.perform(delete ("/drink/delete")
-				.andExpect(status().isNoContent()));
+		mvc.perform(delete ("/drink/delete/1")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNoContent());
 	}
 }
