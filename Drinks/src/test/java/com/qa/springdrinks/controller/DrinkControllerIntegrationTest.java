@@ -1,8 +1,14 @@
 package com.qa.springdrinks.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +26,7 @@ import com.qa.springdrinks.domain.Drink;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Sql(scripts = {"classpath:drink-schema.sql", "classpath:drink-data.sql"}, executionPhase = ExecutionPhase.BEFORE_TEST_METHOD)
+
 @ActiveProfiles("test")
 public class DrinkControllerIntegrationTest {
 	
@@ -42,7 +49,53 @@ public class DrinkControllerIntegrationTest {
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isCreated())
 				.andExpect(content().json(resultAsJSON));
+	}
+	
+	@Test
+	public void getAllTest() throws Exception {
+		Drink entry = new Drink (1L, "Blonde Latte", "Hot", "Coffee", 470);
+		List<Drink> output = new ArrayList <>();
 		
+		output.add(entry);
+		String outputAsJSON = this.mapper.writeValueAsString(output);
+		
+		mvc.perform(get("/drink/getAll")
+				.content(outputAsJSON)
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().json(outputAsJSON));
+	}
+	
+	@Test
+	public void getByIdTest() throws Exception {
+		Drink entry = new Drink (1L, "Mocha", "Hot", "Coffee", 360);
+		String entryAsJSON = this.mapper.writeValueAsString(entry);
+		
+		mvc.perform(get("/drink/getById")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().json(entryAsJSON));
+	}
+	
+	@Test
+	public void updateTest() throws Exception {
+		Drink entry = new Drink (1L, "Hot Chocolate", "Hot", "Chocolate", 400);
+		String entryAsJSON = this.mapper.writeValueAsString(entry);
+		Drink updated = new Drink(1L, "Mocha", "Hot", "Chocolate", 350);
+		String updatedAsJSON = this.mapper.writeValueAsString(updated);
+		
+		mvc.perform(put("/drink/update")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(entryAsJSON))
+				.andExpect(status().isAccepted())
+				.andExpect(content().json(updatedAsJSON));
+	}
+	
+	@Test
+	public void deleteTest() throws Exception {
+		mvc.perform(delete("/drink/delete")
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isNoContent());
 	}
 
 }
